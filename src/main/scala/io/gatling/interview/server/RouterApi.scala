@@ -15,7 +15,8 @@ class RouterApi[F[_] : Effect : ContextShift] extends Endpoint.Module[F] {
 	final val expose: Service[Request, Response] =
 		Endpoint.toService(
 			Bootstrap
-				.serve[Application.Json](computerController.computers)
+				.serve[Application.Json](computerController.fetchComputers)
+				.serve[Application.Json](computerController.addComputer())
 				.compile
 		)
 
