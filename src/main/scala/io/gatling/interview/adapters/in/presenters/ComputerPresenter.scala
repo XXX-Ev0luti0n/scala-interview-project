@@ -20,4 +20,8 @@ case class ComputerPresenter(
 object ComputerPresenter {
 	implicit val decoder: Decoder[ComputerPresenter] = deriveDecoder
 	implicit val encoder: Encoder[ComputerPresenter] = deriveEncoder
+
+	def toComputerPresenter(computer: Computer): ComputerPresenter = {
+		ComputerPresenter(computer.id, computer.name, computer.introduced, computer.discontinued)
+	}
 }

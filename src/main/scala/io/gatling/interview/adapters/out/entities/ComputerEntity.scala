@@ -13,4 +13,14 @@ final case class ComputerEntity(
 	def toDomain: Computer = {
 		Computer(id, name, introduced, discontinued)
 	}
+
+	def isValid: Boolean = {
+		name.nonEmpty
+	}
+}
+
+object ComputerEntity {
+	def toComputerEntity(computer: Computer): ComputerEntity = {
+		ComputerEntity(computer.id, computer.name, computer.introduced, computer.discontinued)
+	}
 }
