@@ -1,26 +1,42 @@
 package io.gatling.interview.application.service
 
+import cats.Applicative
+import cats.implicits._
 import io.gatling.interview.adapters.in.presenters.ComputerPresenter
 import io.gatling.interview.adapters.out.persistance.ComputerMockedRepositoryImplementation
 import io.gatling.interview.application.port.in.ComputerRequest
 
-class ComputerService extends ComputerRequest {
+class ComputerService[F[_] : Applicative] extends ComputerRequest[F] {
 
-	private final val computerAdapter = ComputerMockedRepositoryImplementation()
+	private final val computerAdapter: ComputerMockedRepositoryImplementation[F] = ComputerMockedRepositoryImplementation[F]()
 
-	def fetchComputers: Seq[ComputerPresenter] = {
-		computerAdapter.fetchAll.map(_.toComputerPresenter)
+	def fetchComputers: F[Seq[ComputerPresenter]] = {
+		computerAdapter.fetchAll.map { computers =>
+			computers.map(ComputerPresenter.toComputerPresenter)
+		}
 	}
 
-	def addComputer(): Unit = {
-		computerAdapter.addComputer(???)
+	def addComputer(computerPresenter: ComputerPresenter): F[Unit] = {
+		val computer = computerPresenter.toDomain
+		computerAdapter.save(computer)
 	}
 
-	override def deleteComputer(): Unit = ???
+	def deleteComputer(id: Long): F[Unit] = {
+		computerAdapter.delete(id)
+	}
 
-	override def updateComputer(): ComputerPresenter = ???
+	def findComputer(id: Long): F[Option[ComputerPresenter]] = {
+		computerAdapter.findById(id).map { computers =>
+			computers.map(ComputerPresenter.toComputerPresenter)
+		}
+	}
+
+	def updateComputer(computerPresenter: ComputerPresenter): F[Unit] = {
+		val computer = computerPresenter.toDomain
+		computerAdapter.update(computer)
+	}
 }
 
 object ComputerService {
-	def apply(): ComputerService = new ComputerService()
+	def apply[F[_] : Applicative](): ComputerService[F] = new ComputerService
 }

@@ -2,14 +2,16 @@ package io.gatling.interview.application.port.out
 
 import io.gatling.interview.domain.Computer
 
-trait ComputerRepository {
+trait ComputerRepository[F[_]] {
 
-	def fetchAll: Seq[Computer]
+	def fetchAll: F[Seq[Computer]]
 
-	def addComputer(computer: Computer): Unit
+	def save(computer: Computer): F[Unit]
 
-	def deleteComputer(id: Long): Unit
+	def delete(id: Long): F[Unit]
 
-	def findComputer(id: Long): Option[Computer]
+	def findById(id: Long): F[Option[Computer]]
+
+	def update(computer: Computer): F[Unit]
 
 }
