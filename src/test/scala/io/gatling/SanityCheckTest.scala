@@ -1,10 +1,11 @@
 package io.gatling
 
-import com.typesafe.scalalogging.StrictLogging
-import org.scalatest.{FlatSpec, MustMatchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.must.Matchers
 
-class SanityCheckTest extends FlatSpec with MustMatchers with StrictLogging {
-  it should "just compile and run sanity test" in {
-    "identity" mustBe "identity"
-  }
+
+class SanityCheckTest extends AnyFlatSpec with Matchers {
+	it should "just compile and run sanity test" in {
+		"identity" mustBe "identity"
+	}
 }
