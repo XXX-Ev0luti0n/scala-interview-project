@@ -5,22 +5,22 @@ import java.time.LocalDate
 import io.gatling.interview.domain.Computer
 
 final case class ComputerEntity(
-	id: Long,
-	name: String,
-	introduced: Option[LocalDate],
-	discontinued: Option[LocalDate]
+    id: Long,
+    name: String,
+    introduced: Option[LocalDate],
+    discontinued: Option[LocalDate]
 ) {
-	def toDomain: Computer = {
-		Computer(id, name, introduced, discontinued)
-	}
+  def toDomain: Computer = {
+    Computer(id, name, introduced, discontinued)
+  }
 
-	def isValid: Boolean = {
-		name.nonEmpty
-	}
+  def isValid: Boolean = {
+    name.nonEmpty
+  }
 }
 
 object ComputerEntity {
-	def toComputerEntity(computer: Computer): ComputerEntity = {
-		ComputerEntity(computer.id, computer.name, computer.introduced, computer.discontinued)
-	}
+  def toComputerEntity(computer: Computer): ComputerEntity = {
+    ComputerEntity(computer.id, computer.name, computer.introduced, computer.discontinued)
+  }
 }
