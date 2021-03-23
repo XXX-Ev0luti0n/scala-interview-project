@@ -1,22 +1,21 @@
-import sbt.Global
-
 name := "scala-interview-project"
 
 version := "1.0.0"
 scalaVersion := "2.13.4"
 
-lazy val catsVersion = "2.3.1"
-lazy val scalatestVersion = "3.0.5"
-lazy val scalaLoggingVersion = "3.9.0"
-lazy val logbackClassicVersion= "1.2.3"
-lazy val circeVersion = "0.13.0"
-lazy val finchVersion = "0.32.1"
-lazy val pureconfigVersion = "0.14.0"
+lazy val catsVersion           = "2.3.1"
+lazy val scalatestVersion      = "3.0.5"
+lazy val scalaLoggingVersion   = "3.9.0"
+lazy val logbackClassicVersion = "1.2.3"
+lazy val circeVersion          = "0.13.0"
+lazy val finchVersion          = "0.32.1"
+lazy val pureconfigVersion     = "0.14.0"
 
 scalacOptions ++= Seq(
-  "-encoding", "UTF-8",   // source files are in UTF-8
-  "-deprecation",         // warn about use of deprecated APIs
-  "-Xfatal-warnings"     // turn compiler warnings into errors
+  "-encoding",
+  "UTF-8",           // source files are in UTF-8
+  "-deprecation",    // warn about use of deprecated APIs
+  "-Xfatal-warnings" // turn compiler warnings into errors
 )
 
 libraryDependencies ++= Seq(
@@ -42,6 +41,20 @@ libraryDependencies ++= Seq(
   // Logging
   "io.chrisdavenport" %% "log4cats-slf4j"  % "1.1.1",
   "ch.qos.logback"     % "logback-classic" % "1.2.3" % Runtime,
+  // Database
+  "org.tpolecat" %% "doobie-h2"   % "0.12.1",
+  "org.flywaydb"  % "flyway-core" % "4.2.0",
+  //Refined
+  "eu.timepit" %% "refined"            % "0.9.21",
+  "eu.timepit" %% "refined-cats"       % "0.9.21", // optional
+  "eu.timepit" %% "refined-eval"       % "0.9.21", // optional, JVM-only
+  "eu.timepit" %% "refined-jsonpath"   % "0.9.21", // optional, JVM-only
+  "eu.timepit" %% "refined-pureconfig" % "0.9.21", // optional, JVM-only
+  "eu.timepit" %% "refined-scalacheck" % "0.9.21", // optional
+  "eu.timepit" %% "refined-scalaz"     % "0.9.21", // optional
+  "eu.timepit" %% "refined-scodec"     % "0.9.21", // optional
+  "eu.timepit" %% "refined-scopt"      % "0.9.21", // optional
+  "eu.timepit" %% "refined-shapeless"  % "0.9.21", // optional
   // Testing
   "org.scalatest"     %% "scalatest"       % "3.2.3"   % Test,
   "org.scalatestplus" %% "scalacheck-1-15" % "3.2.3.0" % Test,
