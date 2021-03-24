@@ -6,12 +6,12 @@ trait ComputerRepository[F[_]] {
 
   def fetchAll: F[Seq[Computer]]
 
-  def save(computer: Computer): F[Unit]
+  def save(computer: Computer): F[Computer]
 
-  def delete(id: Long): F[Unit]
+  def delete(id: Long): F[Long]
 
   def findById(id: Long): F[Option[Computer]]
 
-  def update(computer: Computer): F[Unit]
+  def update(computer: Computer): F[Computer]
 
 }
