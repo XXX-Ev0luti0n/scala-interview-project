@@ -3,13 +3,14 @@ package io.gatling.interview.application.service
 import cats.Applicative
 import cats.implicits._
 import io.gatling.interview.adapters.in.presenters.ComputerPresenter
-import io.gatling.interview.adapters.out.persistance.ComputerMockedRepositoryImplementation
 import io.gatling.interview.application.port.in.ComputerRequest
+import io.gatling.interview.application.port.out.ComputerRepository
 
-class ComputerService[F[_]: Applicative] extends ComputerRequest[F] {
+class ComputerService[F[_]: Applicative](computerAdapter: ComputerRepository[F])
+    extends ComputerRequest[F] {
 
-  private final val computerAdapter: ComputerMockedRepositoryImplementation[F] =
-    ComputerMockedRepositoryImplementation[F]()
+  //  private final val computerAdapter: ComputerMockedRepositoryImplementation[F] =
+  //    ComputerMockedRepositoryImplementation[F]()
 
   def fetchComputers: F[Seq[ComputerPresenter]] = {
     computerAdapter.fetchAll.map { computers =>
@@ -17,13 +18,16 @@ class ComputerService[F[_]: Applicative] extends ComputerRequest[F] {
     }
   }
 
-  def addComputer(computerPresenter: ComputerPresenter): F[Unit] = {
+  def addComputer(computerPresenter: ComputerPresenter): F[ComputerPresenter] = {
     val computer = computerPresenter.toDomain
-    computerAdapter.save(computer)
+    computerAdapter.save(computer).map { computer =>
+      ComputerPresenter.toComputerPresenter(computer)
+    }
   }
 
-  def deleteComputer(id: Long): F[Unit] = {
+  def deleteComputer(id: Long): F[Long] = {
     computerAdapter.delete(id)
+    ???
   }
 
   def findComputer(id: Long): F[Option[ComputerPresenter]] = {
@@ -32,12 +36,9 @@ class ComputerService[F[_]: Applicative] extends ComputerRequest[F] {
     }
   }
 
-  def updateComputer(computerPresenter: ComputerPresenter): F[Unit] = {
+  def updateComputer(computerPresenter: ComputerPresenter): F[ComputerPresenter] = {
     val computer = computerPresenter.toDomain
     computerAdapter.update(computer)
+    ???
   }
-}
-
-object ComputerService {
-  def apply[F[_]: Applicative](): ComputerService[F] = new ComputerService
 }
