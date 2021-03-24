@@ -11,6 +11,16 @@ lazy val circeVersion          = "0.13.0"
 lazy val finchVersion          = "0.32.1"
 lazy val pureconfigVersion     = "0.14.0"
 
+enablePlugins(FlywayPlugin)
+
+flywayUrl := "jdbc:h2:file:~/computers:computers:DB_CLOSE_DELAY=-1"
+flywayUser := ""
+flywayPassword := ""
+flywayLocations += "db/migration"
+//flywayUrl in Test := "jdbc:hsqldb:file:target/flyway_sample;shutdown=true"
+//flywayUser in Test := "SA"
+//flywayPassword in Test := ""
+
 scalacOptions ++= Seq(
   "-encoding",
   "UTF-8",           // source files are in UTF-8
