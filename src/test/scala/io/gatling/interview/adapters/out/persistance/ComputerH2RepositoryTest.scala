@@ -7,6 +7,7 @@ import doobie._
 import doobie.implicits._
 import doobie.util.ExecutionContexts
 import io.gatling.interview.adapters.out.entities.ComputerEntity
+import doobie.implicits.javatimedrivernative._
 import org.specs2.mutable.Specification
 
 class ComputerH2RepositoryTest extends Specification with doobie.specs2.IOChecker {

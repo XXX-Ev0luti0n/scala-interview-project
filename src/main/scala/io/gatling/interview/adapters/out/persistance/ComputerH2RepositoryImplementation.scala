@@ -5,6 +5,7 @@ import java.time.LocalDate
 import cats.effect.Sync
 import cats.implicits._
 import doobie.implicits._
+import doobie.implicits.javatimedrivernative._
 import doobie.util.transactor.Transactor
 import io.gatling.interview.adapters.out.entities.ComputerEntity
 import io.gatling.interview.application.port.out.ComputerRepository
