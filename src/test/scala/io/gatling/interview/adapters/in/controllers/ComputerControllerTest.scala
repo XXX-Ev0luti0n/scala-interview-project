@@ -145,4 +145,11 @@ class ComputerControllerTest extends AnyFlatSpec with Matchers with BeforeAndAft
       "There are 2 computer introduced after 2020-10-10"
     )
   }
+
+  it should "[GET] - count computer after given date return None" in {
+    val date = "20100"
+    computerController
+      .count(Input.get(s"/computers/count/$date"))
+      .awaitOutputUnsafe() shouldBe None
+  }
 }
