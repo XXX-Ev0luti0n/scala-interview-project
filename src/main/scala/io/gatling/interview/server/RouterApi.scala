@@ -14,7 +14,9 @@ class RouterApi[F[_]: Effect: ContextShift](computerController: ComputerControll
     Endpoint.toService(
       Bootstrap
         .serve[Application.Json](computerController.fetchComputers)
-        .serve[Application.Json](computerController.addComputer())
+        .serve[Application.Json](computerController.addComputer)
+        .serve[Application.Json](computerController.findComputer)
+        .serve[Application.Json](computerController.deleteComputer)
         .compile
     )
 
