@@ -17,7 +17,8 @@ flywayUrl := "jdbc:h2:file:~/computers:computers:DB_CLOSE_DELAY=-1"
 flywayUser := ""
 flywayPassword := ""
 flywayLocations += "db/migration"
-//flywayUrl in Test := "jdbc:hsqldb:file:target/flyway_sample;shutdown=true"
+//Doesn't work with latest versio
+//flywayUrl in Test := "jdbc:h2:file:~/computers:computers:DB_CLOSE_DELAY=-1"
 //flywayUser in Test := "SA"
 //flywayPassword in Test := ""
 
@@ -38,6 +39,7 @@ libraryDependencies ++= Seq(
   "com.github.finagle" %% "finchx-core"    % finchVersion,
   "com.github.finagle" %% "finchx-circe"   % finchVersion,
   "com.github.finagle" %% "finchx-refined" % finchVersion,
+  "com.github.finagle" %% "finchx-test"    % finchVersion,
   "com.lihaoyi"        %% "scalatags"      % "0.9.2",
   // Circe
   "io.circe" %% "circe-core"    % circeVersion,
@@ -66,7 +68,9 @@ libraryDependencies ++= Seq(
   "eu.timepit" %% "refined-scopt"      % "0.9.21", // optional
   "eu.timepit" %% "refined-shapeless"  % "0.9.21", // optional
   // Testing
-  "org.scalatest"     %% "scalatest"       % "3.2.3"   % Test,
-  "org.scalatestplus" %% "scalacheck-1-15" % "3.2.3.0" % Test,
-  "org.scalacheck"    %% "scalacheck"      % "1.15.2"  % Test
+  "org.scalatest"     %% "scalatest"        % "3.2.5"   % Test,
+  "org.scalatestplus" %% "scalacheck-1-15"  % "3.2.3.0" % Test,
+  "org.tpolecat"      %% "doobie-scalatest" % "0.12.1"  % Test,
+  "org.tpolecat"      %% "doobie-specs2"    % "0.12.1"  % Test,
+  "org.scalacheck"    %% "scalacheck"       % "1.15.2"  % Test
 )
