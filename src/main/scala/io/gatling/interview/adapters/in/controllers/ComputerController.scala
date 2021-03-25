@@ -1,14 +1,17 @@
 package io.gatling.interview.adapters.in.controllers
 
+import java.time.LocalDate
+
 import cats.effect.Effect
 import cats.implicits._
+import com.twitter.util.Try
 import io.finch._
 import io.finch.circe._
 import io.gatling.interview.adapters.in.presenters.ComputerPresenter
-import io.gatling.interview.application.service.ComputerService
+import io.gatling.interview.application.port.in.ComputerRequest
 
 class ComputerController[F[_]: Effect](
-    computerService: ComputerService[F]
+    computerService: ComputerRequest[F]
 ) extends Endpoint.Module[F] {
 
   def fetchComputers: Endpoint[F, Seq[ComputerPresenter]] =
@@ -54,4 +57,25 @@ class ComputerController[F[_]: Effect](
       Conflict(e)
     }
 
+  def findComputerByDate: Endpoint[F, Seq[ComputerPresenter]] = {
+    implicit val decoder: DecodePath[LocalDate] =
+      DecodePath.instance(s => Try(LocalDate.parse(s)).toOption)
+    get("computers" :: "date" :: path[LocalDate]) { date: LocalDate =>
+      computerService.findComputerByDate(date).map(computers => Ok(computers))
+    } handle { case e: Exception =>
+      Conflict(e)
+    }
+  }
+
+  def count: Endpoint[F, String] = {
+    implicit val decoder: DecodePath[LocalDate] =
+      DecodePath.instance(s => Try(LocalDate.parse(s)).toOption)
+    get("computers" :: "count" :: path[LocalDate]) { date: LocalDate =>
+      computerService
+        .countByDate(date)
+        .map(nb => Ok(s"There are $nb computer introduced after $date"))
+    } handle { case e: Exception =>
+      Conflict(e)
+    }
+  }
 }

@@ -16,6 +16,8 @@ class RouterApi[F[_]: Effect: ContextShift](computerController: ComputerControll
         .serve[Application.Json](computerController.fetchComputers)
         .serve[Application.Json](computerController.addComputer)
         .serve[Application.Json](computerController.findComputer)
+        .serve[Application.Json](computerController.findComputerByDate)
+        .serve[Application.Json](computerController.count)
         .serve[Application.Json](computerController.deleteComputer)
         .compile
     )

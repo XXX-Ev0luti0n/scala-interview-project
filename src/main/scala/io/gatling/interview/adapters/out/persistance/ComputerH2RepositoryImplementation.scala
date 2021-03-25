@@ -1,5 +1,7 @@
 package io.gatling.interview.adapters.out.persistance
 
+import java.time.LocalDate
+
 import cats.effect.Sync
 import cats.implicits._
 import doobie.implicits._
@@ -55,6 +57,28 @@ class ComputerH2RepositoryImplementation[F[_]: Sync](xa: Transactor[F])
       .query[ComputerEntity]
       .map(_.toDomain)
       .option
+      .transact(xa)
+  }
+
+  def findByDate(date: LocalDate): F[Seq[Computer]] = {
+    sql"""select id, name, introduced, discontinued
+					from computer where introduced > $date
+					"""
+      .query[ComputerEntity]
+      .map(_.toDomain)
+      .stream
+      .compile
+      .toList
+      .transact(xa)
+      .map(_.toSeq)
+  }
+
+  def countByDate(date: LocalDate): F[Long] = {
+    sql"""select count(*)
+					from computer where introduced > $date
+					"""
+      .query[Long]
+      .unique
       .transact(xa)
   }
 

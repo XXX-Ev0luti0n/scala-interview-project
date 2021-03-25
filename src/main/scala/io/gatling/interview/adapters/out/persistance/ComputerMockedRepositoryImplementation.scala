@@ -1,5 +1,7 @@
 package io.gatling.interview.adapters.out.persistance
 
+import java.time.LocalDate
+
 import cats.Applicative
 import cats.implicits._
 import io.gatling.interview.adapters.out.entities.ComputerEntity
@@ -51,6 +53,18 @@ class ComputerMockedRepositoryImplementation[F[_]: Applicative] extends Computer
   def update(computer: Computer): F[Computer] = {
     Applicative[F].pure(
       updateAux(computer)
+    )
+  }
+
+  def findByDate(date: LocalDate): F[Seq[Computer]] = {
+    Applicative[F].pure(
+      Seq.empty
+    )
+  }
+
+  def countByDate(date: LocalDate): F[Long] = {
+    Applicative[F].pure(
+      0L
     )
   }
 }

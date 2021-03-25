@@ -1,5 +1,7 @@
 package io.gatling.interview.application.port.in
 
+import java.time.LocalDate
+
 import io.gatling.interview.adapters.in.presenters.ComputerPresenter
 
 trait ComputerRequest[F[_]] {
@@ -13,5 +15,9 @@ trait ComputerRequest[F[_]] {
   def findComputer(id: Long): F[Option[ComputerPresenter]]
 
   def updateComputer(computerPresenter: ComputerPresenter): F[ComputerPresenter]
+
+  def findComputerByDate(date: LocalDate): F[Seq[ComputerPresenter]]
+
+  def countByDate(date: LocalDate): F[Long]
 
 }

@@ -1,5 +1,7 @@
 package io.gatling.interview.application.service
 
+import java.time.LocalDate
+
 import cats.Applicative
 import cats.implicits._
 import io.gatling.interview.adapters.in.presenters.ComputerPresenter
@@ -35,8 +37,18 @@ class ComputerService[F[_]: Applicative](computerAdapter: ComputerRepository[F])
     }
   }
 
+  def findComputerByDate(date: LocalDate): F[Seq[ComputerPresenter]] = {
+    computerAdapter.findByDate(date).map { computers =>
+      computers.map(ComputerPresenter.toComputerPresenter)
+    }
+  }
+
   def updateComputer(computerPresenter: ComputerPresenter): F[ComputerPresenter] = {
     val computer = computerPresenter.toDomain
     computerAdapter.update(computer).map(ComputerPresenter.toComputerPresenter)
+  }
+
+  def countByDate(date: LocalDate): F[Long] = {
+    computerAdapter.countByDate(date)
   }
 }

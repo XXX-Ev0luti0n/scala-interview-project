@@ -1,5 +1,7 @@
 package io.gatling.interview.adapters.out.persistance
 
+import java.time.LocalDate
+
 import cats.effect._
 import doobie._
 import doobie.implicits._
@@ -33,7 +35,21 @@ class ComputerH2RepositoryTest extends Specification with doobie.specs2.IOChecke
           );
     """.query[Unit]
 
+  def findById(id: Long): doobie.Query0[ComputerEntity] =
+    sql"""select id, name, introduced, discontinued
+					from computer where id = $id
+					"""
+      .query[ComputerEntity]
+
+  def findByDate(date: LocalDate): doobie.Query0[ComputerEntity] =
+    sql"""select id, name, introduced, discontinued
+					from computer where introduced > $date
+					"""
+      .query[ComputerEntity]
+
   check(createTable)
   check(getComputer)
+  check(findById(1L))
+  check(findByDate(LocalDate.now()))
 
 }

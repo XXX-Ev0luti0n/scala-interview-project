@@ -1,5 +1,7 @@
 package io.gatling
 
+import java.time.LocalDate
+
 import cats.effect.{ContextShift, IO}
 import com.twitter.finagle.http.Status
 import com.twitter.io.Buf
@@ -7,8 +9,10 @@ import doobie.Transactor
 import doobie.util.ExecutionContexts
 import io.finch.{Application, Input, Output}
 import io.gatling.interview.adapters.in.controllers.ComputerController
+import io.gatling.interview.adapters.in.presenters.ComputerPresenter
 import io.gatling.interview.adapters.out.persistance.ComputerH2RepositoryImplementation
 import io.gatling.interview.application.service.ComputerService
+import io.gatling.interview.domain.Computer
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
@@ -27,6 +31,9 @@ class ComputerControllerTest extends AnyFlatSpec with Matchers with BeforeAndAft
 
   override def beforeAll(): Unit = {
     computerAdapter.createTableComputer.unsafeRunSync()
+    (10 to 11).map { id =>
+      computerAdapter.save(Computer(id, s"name-$id", Some(LocalDate.now()), None)).unsafeRunSync()
+    }
     println("Init test env")
   }
 
@@ -115,4 +122,27 @@ class ComputerControllerTest extends AnyFlatSpec with Matchers with BeforeAndAft
 
   }
 
+  it should "[GET] - find computer with filter date works" in {
+
+    val date = "2020-10-10"
+    computerController
+      .findComputerByDate(Input.get(s"/computers/date/$date"))
+      .awaitOutputUnsafe()
+      .map(_.value) shouldBe Some(
+      Seq(
+        ComputerPresenter(10, "name-10", Some(LocalDate.now()), None),
+        ComputerPresenter(11, "name-11", Some(LocalDate.now()), None)
+      )
+    )
+  }
+
+  it should "[GET] - count computer after given date works" in {
+    val date = "2020-10-10"
+    computerController
+      .count(Input.get(s"/computers/count/$date"))
+      .awaitOutputUnsafe()
+      .map(_.value) shouldBe Some(
+      "There are 2 computer introduced after 2020-10-10"
+    )
+  }
 }
