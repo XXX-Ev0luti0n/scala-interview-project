@@ -15,6 +15,11 @@ case class ComputerPresenter(
   def toDomain: Computer = {
     Computer(id, name, introduced, discontinued)
   }
+
+  override def toString: String =
+    s"Computer $name with id : $id${introduced.fold("")(date => s" introduced : $date")}${discontinued
+      .fold("")(date => s" discontinued : $date")}"
+
 }
 
 object ComputerPresenter {
@@ -24,4 +29,5 @@ object ComputerPresenter {
   def toComputerPresenter(computer: Computer): ComputerPresenter = {
     ComputerPresenter(computer.id, computer.name, computer.introduced, computer.discontinued)
   }
+
 }

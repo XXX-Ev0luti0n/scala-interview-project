@@ -1,33 +1,118 @@
-package io.gatling.interview.adapters.in.controllers
+package io.gatling
 
-import io.gatling.utils.ServerTest
+import cats.effect.{ContextShift, IO}
+import com.twitter.finagle.http.Status
+import com.twitter.io.Buf
+import doobie.Transactor
+import doobie.util.ExecutionContexts
+import io.finch.{Application, Input, Output}
+import io.gatling.interview.adapters.in.controllers.ComputerController
+import io.gatling.interview.adapters.out.persistance.ComputerH2RepositoryImplementation
+import io.gatling.interview.application.service.ComputerService
+import org.scalatest.BeforeAndAfterAll
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
-class ComputerControllerTest extends AnyFlatSpec with Matchers {
-  it should "return expected computers" in {
-    val applicationTest = ServerTest()
-    val expectedJson =
-      """
-				|[
-				|   {
-				|      "id":1,
-				|      "name":"toto",
-				|      "introduced":"2021-03-21",
-				|      "discontinued":null
-				|   },
-				|   {
-				|      "id":2,
-				|      "name":"tata",
-				|      "introduced":null,
-				|      "discontinued":null
-				|   }
-				|]
-				|""".stripMargin
+class ComputerControllerTest extends AnyFlatSpec with Matchers with BeforeAndAfterAll {
+  behavior of "the computer endpoint"
+  implicit final val cs: ContextShift[IO] = IO.contextShift(ExecutionContexts.synchronous)
+  val transactor: Transactor[IO] = Transactor
+    .fromDriverManager[IO](
+      "org.h2.Driver",
+      "jdbc:h2:file:~/controller:computers:DB_CLOSE_DELAY=-1"
+    )
+  val computerAdapter    = new ComputerH2RepositoryImplementation[IO](transactor)
+  val computerService    = new ComputerService[IO](computerAdapter)
+  val computerController = new ComputerController[IO](computerService)
 
-    applicationTest.get("/computers").map { result =>
-      assert(result === expectedJson)
-    }
+  override def beforeAll(): Unit = {
+    computerAdapter.createTableComputer.unsafeRunSync()
+    println("Init test env")
+  }
+
+  override def afterAll(): Unit = {
+    //    computerAdapter.deleteAll().unsafeRunSync()
+    computerAdapter.dropTableComputer.unsafeRunSync()
+    println("cleaning test env ")
+  }
+
+  it should "[POST] - add computer works" in {
+    val computerJson: Buf = Buf.Utf8(
+      """
+        |{
+        |      "id": 1,
+        |      "name": "MacBook Pro 15.4 inch"
+        |    }
+        |""".stripMargin
+    )
+    computerController
+      .addComputer(Input.post("/computer").withBody[Application.Json](computerJson))
+      .awaitOutputUnsafe() shouldBe Some(
+      Output.payload[String](
+        "[Computer MacBook Pro 15.4 inch with id : 1 well added !!!]",
+        Status(201)
+      )
+    )
+  }
+
+  it should "[POST] - update computer works" in {
+    val computerJson: Buf = Buf.Utf8(
+      """
+        |{
+        |      "id": 1,
+        |      "name": "Artichaut"
+        |    }
+        |""".stripMargin
+    )
+    computerController
+      .addComputer(Input.post("/computer").withBody[Application.Json](computerJson))
+      .awaitOutputUnsafe() shouldBe Some(
+      Output.payload[String](
+        "[Computer Artichaut with id : 1 well updated !!!]",
+        Status(200)
+      )
+    )
+  }
+
+  it should "[DELETE] - remove computer works" in {
+    val id = 2
+    computerController
+      .deleteComputer(Input.delete(s"/computer/$id"))
+      .awaitOutputUnsafe() shouldBe Some(
+      Output.payload[String](
+        "[Computer well deleted !!!]",
+        Status(200)
+      )
+    )
+  }
+
+  it should "[DELETE] - remove computer failed" in {
+    val id = 999
+    computerController
+      .deleteComputer(Input.delete(s"/computer/$id"))
+      .awaitOutputUnsafe()
+      .map(_.status) shouldBe Some(Status.Ok)
+  }
+
+  it should "[GET] - find computer works" in {
+    val id = 1
+    computerController
+      .findComputer(Input.get(s"/computer/$id"))
+      .awaitOutputUnsafe() shouldBe Some(
+      Output.payload[String](
+        "[Computer Artichaut with id : 1 found !!!]",
+        Status(200)
+      )
+    )
+  }
+
+  it should "[GET] - find computer failed with status 404" in {
+    val id = 999
+    computerController
+      .findComputer(Input.get(s"/computer/$id"))
+      .awaitOutputUnsafe()
+      .map(_.status) shouldBe Some(Status(404))
+
   }
 
 }
