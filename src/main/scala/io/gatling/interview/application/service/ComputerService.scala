@@ -27,7 +27,6 @@ class ComputerService[F[_]: Applicative](computerAdapter: ComputerRepository[F])
 
   def deleteComputer(id: Long): F[Long] = {
     computerAdapter.delete(id)
-    ???
   }
 
   def findComputer(id: Long): F[Option[ComputerPresenter]] = {
@@ -38,7 +37,6 @@ class ComputerService[F[_]: Applicative](computerAdapter: ComputerRepository[F])
 
   def updateComputer(computerPresenter: ComputerPresenter): F[ComputerPresenter] = {
     val computer = computerPresenter.toDomain
-    computerAdapter.update(computer)
-    ???
+    computerAdapter.update(computer).map(ComputerPresenter.toComputerPresenter)
   }
 }
