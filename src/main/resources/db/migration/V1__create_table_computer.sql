@@ -1,5 +1,5 @@
 create table computer (
-  id                            varchar(255) not null,
+  id                            bigint not null AUTO_INCREMENT,
   name                          varchar(255) not null,
   introduced                    date(255),
   discontinued                  date(255),
