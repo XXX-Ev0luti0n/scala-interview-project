@@ -2,7 +2,7 @@ package io.gatling.interview.application.port.out
 
 import java.time.LocalDate
 
-import io.gatling.interview.domain.Computer
+import io.gatling.interview.application.domain.Computer
 
 trait ComputerRepository[F[_]] {
 

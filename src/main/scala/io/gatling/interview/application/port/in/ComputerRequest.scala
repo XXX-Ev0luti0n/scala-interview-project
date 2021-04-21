@@ -2,7 +2,7 @@ package io.gatling.interview.application.port.in
 
 import java.time.LocalDate
 
-import io.gatling.interview.adapters.in.presenters.ComputerPresenter
+import io.gatling.interview.application.port.in.presenters.ComputerPresenter
 
 trait ComputerRequest[F[_]] {
 

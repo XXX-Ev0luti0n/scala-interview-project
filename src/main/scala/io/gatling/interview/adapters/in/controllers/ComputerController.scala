@@ -7,7 +7,7 @@ import cats.implicits._
 import com.twitter.util.Try
 import io.finch._
 import io.finch.circe._
-import io.gatling.interview.adapters.in.presenters.ComputerPresenter
+import io.gatling.interview.application.port.in.presenters.ComputerPresenter
 import io.gatling.interview.application.port.in.ComputerRequest
 
 class ComputerController[F[_]: Effect](
@@ -21,6 +21,20 @@ class ComputerController[F[_]: Effect](
 
   def addComputer: Endpoint[F, String] =
     post("computer" :: jsonBody[ComputerPresenter]) { computerPresenter: ComputerPresenter =>
+      for{
+        findComputer <- computerService.findComputer(computerPresenter.id)
+      }yield{
+        findComputer match{
+          case Some(_) =>
+            computerService.updateComputer(computerPresenter).map { computer =>
+              Ok(s"[$computer well updated !!!]")
+            }
+          case _ =>
+            computerService.addComputer(computerPresenter).map { computer =>
+              Created(s"[$computer well added !!!]")
+            }
+        }
+      }
       computerService.findComputer(computerPresenter.id).flatMap {
         case Some(_) =>
           computerService.updateComputer(computerPresenter).map { computer =>

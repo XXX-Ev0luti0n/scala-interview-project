@@ -1,12 +1,12 @@
-package io.gatling.interview.adapters.in.presenters
+package io.gatling.interview.application.port.in.presenters
 
 import java.time.LocalDate
 
 import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
 import io.circe.{Decoder, Encoder}
-import io.gatling.interview.domain.Computer
+import io.gatling.interview.application.domain.Computer
 
-case class ComputerPresenter(
+final case class ComputerPresenter(
     id: Long,
     name: String,
     introduced: Option[LocalDate],

@@ -4,7 +4,7 @@ import java.time.LocalDate
 
 import cats.Applicative
 import cats.implicits._
-import io.gatling.interview.adapters.in.presenters.ComputerPresenter
+import io.gatling.interview.application.port.in.presenters.ComputerPresenter
 import io.gatling.interview.application.port.in.ComputerRequest
 import io.gatling.interview.application.port.out.ComputerRepository
 

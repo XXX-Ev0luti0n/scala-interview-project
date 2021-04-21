@@ -1,10 +1,10 @@
-package io.gatling.interview.adapters.out.entities
+package io.gatling.interview.application.port.out.entities
 
 import java.time.LocalDate
 
 import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
 import io.circe.{Decoder, Encoder}
-import io.gatling.interview.domain.Computer
+import io.gatling.interview.application.domain.Computer
 
 final case class ComputerEntity(
     id: Long,

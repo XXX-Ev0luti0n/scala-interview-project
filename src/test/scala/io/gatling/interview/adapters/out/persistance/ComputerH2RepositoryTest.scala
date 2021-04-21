@@ -6,7 +6,7 @@ import cats.effect._
 import doobie._
 import doobie.implicits._
 import doobie.util.ExecutionContexts
-import io.gatling.interview.adapters.out.entities.ComputerEntity
+import io.gatling.interview.application.port.out.entities.ComputerEntity
 import doobie.implicits.javatimedrivernative._
 import org.specs2.mutable.Specification
 

@@ -1,4 +1,4 @@
-package io.gatling.interview.domain
+package io.gatling.interview.application.domain
 
 import java.time.LocalDate
 

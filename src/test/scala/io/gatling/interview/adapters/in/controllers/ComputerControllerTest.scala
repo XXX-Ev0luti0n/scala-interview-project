@@ -9,10 +9,10 @@ import doobie.Transactor
 import doobie.util.ExecutionContexts
 import io.finch.{Application, Input, Output}
 import io.gatling.interview.adapters.in.controllers.ComputerController
-import io.gatling.interview.adapters.in.presenters.ComputerPresenter
+import io.gatling.interview.application.port.in.presenters.ComputerPresenter
 import io.gatling.interview.adapters.out.persistance.ComputerH2RepositoryImplementation
 import io.gatling.interview.application.service.ComputerService
-import io.gatling.interview.domain.Computer
+import io.gatling.interview.application.domain.Computer
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers

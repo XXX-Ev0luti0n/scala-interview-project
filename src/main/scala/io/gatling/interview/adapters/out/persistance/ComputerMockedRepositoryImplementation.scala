@@ -4,9 +4,9 @@ import java.time.LocalDate
 
 import cats.Applicative
 import cats.implicits._
-import io.gatling.interview.adapters.out.entities.ComputerEntity
+import io.gatling.interview.application.port.out.entities.ComputerEntity
 import io.gatling.interview.application.port.out.ComputerRepository
-import io.gatling.interview.domain.Computer
+import io.gatling.interview.application.domain.Computer
 
 import scala.collection.mutable
 
