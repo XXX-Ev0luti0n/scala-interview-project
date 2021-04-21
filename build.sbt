@@ -2,7 +2,7 @@ name := "scala-interview-project"
 
 version := "1.0.0"
 scalaVersion := "2.13.4"
-
+fork in run :=true
 lazy val catsVersion           = "2.3.1"
 lazy val scalatestVersion      = "3.0.5"
 lazy val scalaLoggingVersion   = "3.9.0"

@@ -54,11 +54,9 @@ class ServerApplication[F[_]: ConcurrentEffect: ContextShift: Timer] {
   ): Resource[F, ListeningServer] =
     Resource.make(
       ConcurrentEffect[F].delay(
-        Await.ready(
           Http.server
             .withExecutionOffloaded(serverExecutorService)
             .serve(s":${config.port}", service)
-        )
       )
     )(s => Sync[F].suspend(implicitly[ToAsync[Future, F]].apply(s.close())))
 
